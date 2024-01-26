@@ -1391,7 +1391,7 @@ def realtimeVS5yr(data, valsOnDate="2023-10-03", debug=False):
     plt.show()
 
 
-def goalVSactual(data, ax_list=None, target_CO2=16000, target_VOC=24000, target_NOX_SOX=500, target_Cu=10500, target_Si = 120, debug=True, show = True,fontScale = 1):
+def goalVSactual(data, ax_list=None, target_CO2=48000, target_VOC=72000, target_NOX_SOX=1500, target_Cu=31500, target_Si = 360, debug=True, show = True,fontScale = 1):
     """
     Plot projected savings as pie charts for different metrics.
     - data: DataFrame containing the metrics columns.
@@ -1581,7 +1581,7 @@ print(w_string)"""
 #dashboard(df,background_image_path="background2.png")
 #dashboard(df,background_image_path="background3.png")
 #dashboard(df,background_image_path="background4.png")
-dashboard(df,background_image_path="background2.png")
+dashboard(df,background_image_path="background4.png")
 
 
 
