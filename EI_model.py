@@ -4,16 +4,14 @@ from openpyxl import load_workbook
 import numpy as np
 from datetime import date, timedelta
 import matplotlib.pyplot as plt
-from adjustText import adjust_text
 import matplotlib.ticker as ticker
 import plotly.graph_objects as go
-import bar_chart_race as bcr
 import matplotlib.dates as mdates
 from matplotlib.colors import LinearSegmentedColormap
 import matplotlib.font_manager as font_manager
 from PIL import Image
-from bs4 import BeautifulSoup
-import requests
+#from bs4 import BeautifulSoup
+#import requests
 import re
 
 
@@ -65,8 +63,7 @@ def set_axis_font(ax, font_properties):
         text.set_fontproperties(font_properties)
 
 
-
-path = r"C:\Users\jmurp\Graphite Innovation & Technologies\Corporate - Documents\Post-Sales Operations\12-Energy & Efficiency\1 - Performance & Analysis\22 - Environmental Impact\Environmental Impact Database V7.xlsx"
+"""
 
 
 # Load the workbook
@@ -90,6 +87,7 @@ emissionData = pd.read_excel(path,sheet_name="Emission Factors")
 emission_factors = dict(zip(emissionData["Fuel Type"], emissionData["Emission Factors"]))
 
 #print(emission_factors)
+"""
 
 def check_fuel_type(fuel_type, emission_factors):
     # Split the fuel type by '/' and strip any whitespace
@@ -781,14 +779,16 @@ def environmental_impact_calculation(data, emission_factors, days, fuelPrices,VO
 
     #finalDataframe["Fleet Fuel Usage (t)"] =
 
-    finalDataframe.to_excel(f"results/Results {days[0]}-{days[-1]} V{numvessels}.xlsx")
+    file_name = f"Model Results/Results {days[0]}-{days[-1]} V{numvessels}.csv"
+
+    finalDataframe.to_csv(file_name)
 
     if debug:
         print(f"There are {len(data['Vessel Name'].unique())} unique vessels.")
         print(f"Unique Vessel Names: {data['Vessel Name'].unique()}")
 
 
-    return finalDataframe
+    return finalDataframe, file_name
 
 
 def calculate_cumulative_savings(df, date, vessel):
@@ -1091,7 +1091,7 @@ def plot_enhanced_area(ax, df_savings, start_date, end_date, debug=False):
         print("Plotting completed.")
 
 
-def dashboard(data, tick_size=40, text_size=20, background_image_path=None):
+def dashboard(data, tick_size=40, text_size=20, background_image_path=None,show = False):
     # Add the main and secondary color codes here
     main_colors = ['#1B444E', '#32CCC8', '#87D057', '#FFFFFF', '#000000']
     secondary_colors = ['#D54950', '#0D1631']
@@ -1100,7 +1100,6 @@ def dashboard(data, tick_size=40, text_size=20, background_image_path=None):
 
     fig = plt.figure(figsize=(11, 8.5))  # standard 8.5 x 11 sheet in landscape
 
-    # If a background image path is provided, load the image and set it as the figure background
     # If a background image path is provided, load the image and set it as the figure background
     if background_image_path:
         img = Image.open(background_image_path)
@@ -1257,10 +1256,13 @@ def dashboard(data, tick_size=40, text_size=20, background_image_path=None):
     # Adjusting the spacing between subplots
     fig.subplots_adjust(top=0.895, bottom=0.078, left=0.043, right=0.967, hspace=0.408, wspace=0.965)
 
+    #get todays date with no characters that cant be saved as a file name
+    todays_date = str(datetime.now()).split(" ")[0]
 
     #plt.tight_layout()
-    plt.savefig("Dashboards/dash " + background_image_path , dpi=300)
-    plt.show()
+    plt.savefig(f"Plots/ei_dash_{todays_date}.png" , dpi=300)
+    if show:
+        plt.show()
 
 def process_dataframe(df):
     # Identify columns that match the format "STOLT STREAM CO2 Saved Today (t)"
@@ -1529,16 +1531,16 @@ SOXEmmision = {
     "VLSFO" : 1.37
 }
 # start date
-start_date = date(2023, 1, 1)
+#start_date = date(2023, 1, 1)
 
 # end date
-end_date = date(2025, 1, 1)
+#end_date = date(2025, 1, 1)
 
 # calculate the number of days in 2023
-delta = end_date - start_date
+#delta = end_date - start_date
 
 # generate the list of days
-dates = [(start_date + timedelta(days=i)).isoformat() for i in range(delta.days + 1)]
+#dates = [(start_date + timedelta(days=i)).isoformat() for i in range(delta.days + 1)]
 #jan to june end YTD
 
 #def environmental_impact_calculation(data, emission_factors, days, fuelPrices,VOCEmmision,SOXEmmision,NOXEmmision, output,report = True):
@@ -1558,7 +1560,7 @@ dates = [(start_date + timedelta(days=i)).isoformat() for i in range(delta.days 
 
 
 
-df = pd.read_excel(r"C:\Users\jmurp\Graphite Innovation & Technologies\Corporate - Documents\Post-Sales Operations\12-Energy & Efficiency\1 - Performance & Analysis\22 - Environmental Impact\EI Model\results\Results 2023-01-01-2025-01-01 V111.xlsx")
+#df = pd.read_excel(r"C:\Users\jmurp\Graphite Innovation & Technologies\Corporate - Documents\Post-Sales Operations\12-Energy & Efficiency\1 - Performance & Analysis\22 - Environmental Impact\EI Model\results\Results 2023-01-01-2025-01-01 V111.xlsx")
 
 """q_string, m_string, w_string, ytd_string = weeklyReport(df, quarter = 4,month = 10,week = 2)
 
@@ -1581,7 +1583,7 @@ print(w_string)"""
 #dashboard(df,background_image_path="background2.png")
 #dashboard(df,background_image_path="background3.png")
 #dashboard(df,background_image_path="background4.png")
-dashboard(df,background_image_path="background4.png")
+#(df,background_image_path="background4.png")
 
 
 
